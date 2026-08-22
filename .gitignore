@@ -1,0 +1,58 @@
+<<<<<<< HEAD
+=======
+# .NET build
+**/bin/
+**/obj/
+
+>>>>>>> b39ac5ff8c2928a98fd7e101a2dcb10b68f168bf
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+<<<<<<< HEAD
+# .NET
+**/bin/
+**/obj/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Secrets
+=======
+# VS Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Environment variables / secrets
+>>>>>>> b39ac5ff8c2928a98fd7e101a2dcb10b68f168bf
+.env
+.env.*
+!.env.example
+
+<<<<<<< HEAD
+=======
+# Local configuration with secrets
+appsettings.Local.json
+appsettings.*.Local.json
+
+>>>>>>> b39ac5ff8c2928a98fd7e101a2dcb10b68f168bf
+# Angular / Node
+**/node_modules/
+**/dist/
+**/.angular/
+
+# OS
+Thumbs.db
+<<<<<<< HEAD
+.DS_Store
+=======
+.DS_Store
+>>>>>>> b39ac5ff8c2928a98fd7e101a2dcb10b68f168bf

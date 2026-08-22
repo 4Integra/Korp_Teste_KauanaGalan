@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/services/">
+    <Project Path="services/Billing.Api/Billing.Api.csproj" />
+    <Project Path="services/Inventory.Api/Inventory.Api.csproj" />
+  </Folder>
+</Solution>
