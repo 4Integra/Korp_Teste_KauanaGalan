@@ -1,5 +1,7 @@
 using Billing.Api.Data;
 using Billing.Api.Clients;
+using Billing.Api.Services;
+using Billing.Api.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +18,7 @@ builder.Services.AddDbContext<BillingDbContext>(options =>
     )
 );
 
-builder.Services.AddHttpClient<InventoryClient>(client =>
+builder.Services.AddHttpClient<IInventoryClient, InventoryClient>(client =>
 {
     var inventoryUrl =
         builder.Configuration["Services:InventoryUrl"]
@@ -26,7 +28,14 @@ builder.Services.AddHttpClient<InventoryClient>(client =>
     client.BaseAddress = new Uri(inventoryUrl);
 });
 
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

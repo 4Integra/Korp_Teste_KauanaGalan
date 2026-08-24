@@ -4,7 +4,7 @@ using Billing.Api.Dtos;
 
 namespace Billing.Api.Clients;
 
-public class InventoryClient
+public class InventoryClient : IInventoryClient
 {
     private readonly HttpClient _httpClient;
 
@@ -14,10 +14,12 @@ public class InventoryClient
     }
 
     public async Task<InventoryProductResponse?> GetProductByIdAsync(
-        Guid productId)
+        Guid productId,
+        CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync(
-            $"/api/products/{productId}");
+            $"/api/products/{productId}",
+            cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
@@ -27,15 +29,17 @@ public class InventoryClient
         response.EnsureSuccessStatusCode();
 
         return await response.Content
-            .ReadFromJsonAsync<InventoryProductResponse>();
+            .ReadFromJsonAsync<InventoryProductResponse>(
+                cancellationToken: cancellationToken);
     }
 
     public async Task<HttpResponseMessage> DecreaseStockAsync(
-    InventoryDecreaseStockRequest request)
+        InventoryDecreaseStockRequest request,
+        CancellationToken cancellationToken)
     {
         return await _httpClient.PostAsJsonAsync(
             "/api/stock/decrease",
-            request
-        );
+            request,
+            cancellationToken);
     }
 }
