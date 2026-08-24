@@ -1,4 +1,5 @@
-﻿using Billing.Api.Data;
+﻿using Billing.Api.Clients;
+using Billing.Api.Data;
 using Billing.Api.Dtos;
 using Billing.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Billing.Api.Controllers;
 public class InvoicesController : ControllerBase
 {
     private readonly BillingDbContext _context;
+    private readonly InventoryClient _inventoryClient;
 
-    public InvoicesController(BillingDbContext context)
+    public InvoicesController(BillingDbContext context, InventoryClient inventoryClient)
     {
         _context = context;
+        _inventoryClient = inventoryClient;
     }
 
     [HttpPost]
@@ -29,6 +32,34 @@ public class InvoicesController : ControllerBase
                 Quantity = group.Sum(item => item.Quantity)
             })
             .ToList();
+
+        try
+        {
+            foreach (var item in groupedItems)
+            {
+                var product = await _inventoryClient
+                    .GetProductByIdAsync(item.ProductId);
+
+                if (product is null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Um dos produtos informados não existe.",
+                        productId = item.ProductId
+                    });
+                }
+            }
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    message =
+                        "O serviço de estoque está temporariamente indisponível. Tente novamente."
+                });
+        }
 
         var invoice = new Invoice
         {
