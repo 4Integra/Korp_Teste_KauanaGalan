@@ -4,6 +4,7 @@ using Billing.Api.Dtos;
 using Billing.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Json;
 
 namespace Billing.Api.Controllers;
 
@@ -139,5 +140,78 @@ public class InvoicesController : ControllerBase
                 })
                 .ToList()
         };
+    }
+
+    [HttpPost("{id:guid}/print")]
+    public async Task<ActionResult<InvoiceResponse>> Print(Guid id)
+    {
+        var invoice = await _context.Invoices
+            .Include(invoice => invoice.Items)
+            .FirstOrDefaultAsync(invoice => invoice.Id == id);
+
+        if (invoice is null)
+        {
+            return NotFound(new
+            {
+                message = "Nota fiscal não encontrada."
+            });
+        }
+
+        if (invoice.Status != InvoiceStatus.Open)
+        {
+            return Conflict(new
+            {
+                message = "Somente notas abertas podem ser impressas."
+            });
+        }
+
+        var stockRequest = new InventoryDecreaseStockRequest
+        {
+            Items = invoice.Items
+                .Select(item => new InventoryDecreaseStockItemRequest
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity
+                })
+                .ToList()
+        };
+
+        try
+        {
+            var inventoryResponse = await _inventoryClient
+                .DecreaseStockAsync(stockRequest);
+
+            if (!inventoryResponse.IsSuccessStatusCode)
+            {
+                var error = await inventoryResponse.Content
+                    .ReadFromJsonAsync<InventoryErrorResponse>();
+
+                return StatusCode(
+                    (int)inventoryResponse.StatusCode,
+                    new
+                    {
+                        message = error?.Message
+                            ?? "Não foi possível atualizar o estoque."
+                    }
+                );
+            }
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                new
+                {
+                    message =
+                        "O serviço de estoque está temporariamente indisponível. Tente novamente."
+                }
+            );
+        }
+
+        invoice.Status = InvoiceStatus.Closed;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(MapToResponse(invoice));
     }
 }

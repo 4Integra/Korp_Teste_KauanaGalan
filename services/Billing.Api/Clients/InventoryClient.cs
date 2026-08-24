@@ -29,4 +29,13 @@ public class InventoryClient
         return await response.Content
             .ReadFromJsonAsync<InventoryProductResponse>();
     }
+
+    public async Task<HttpResponseMessage> DecreaseStockAsync(
+    InventoryDecreaseStockRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync(
+            "/api/stock/decrease",
+            request
+        );
+    }
 }
