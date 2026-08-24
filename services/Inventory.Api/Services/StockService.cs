@@ -97,4 +97,68 @@ public class StockService : IStockService
                 .ToList()
         };
     }
+
+    public async Task<IncreaseStockResponse> IncreaseAsync(
+    IncreaseStockRequest request,
+    CancellationToken cancellationToken)
+    {
+        var requestedItems = request.Items
+            .GroupBy(item => item.ProductId)
+            .Select(group => new
+            {
+                ProductId = group.Key,
+                Quantity = group.Sum(item => item.Quantity)
+            })
+            .ToList();
+
+        var productIds = requestedItems
+            .Select(item => item.ProductId)
+            .ToList();
+
+        var products = await _context.Products
+            .Where(product => productIds.Contains(product.Id))
+            .ToListAsync(cancellationToken);
+
+        if (products.Count != productIds.Count)
+        {
+            var foundIds = products
+                .Select(product => product.Id)
+                .ToHashSet();
+
+            var missingIds = productIds
+                .Where(id => !foundIds.Contains(id))
+                .ToList();
+
+            throw new ProductsNotFoundException(missingIds);
+        }
+
+        foreach (var requestedItem in requestedItems)
+        {
+            var product = products.First(
+                product =>
+                    product.Id == requestedItem.ProductId);
+
+            product.StockQuantity += requestedItem.Quantity;
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation(
+            "Stock successfully increased for {ProductCount} product(s).",
+            products.Count);
+
+        return new IncreaseStockResponse
+        {
+            Message = "Estoque atualizado com sucesso.",
+
+            Items = products
+                .Select(product => new IncreaseStockItemResponse
+                {
+                    ProductId = product.Id,
+                    Code = product.Code,
+                    StockQuantity = product.StockQuantity
+                })
+                .ToList()
+        };
+    }
 }

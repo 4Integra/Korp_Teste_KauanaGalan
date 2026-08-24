@@ -27,4 +27,16 @@ public class StockController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost("increase")]
+    public async Task<ActionResult<IncreaseStockResponse>> Increase(
+    IncreaseStockRequest request,
+    CancellationToken cancellationToken)
+    {
+        var result = await _stockService.IncreaseAsync(
+            request,
+            cancellationToken);
+
+        return Ok(result);
+    }
 }
