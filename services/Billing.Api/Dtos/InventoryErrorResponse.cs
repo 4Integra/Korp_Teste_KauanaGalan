@@ -2,5 +2,7 @@
 
 public class InventoryErrorResponse
 {
-    public string Message { get; set; } = string.Empty;
+    public string? Detail { get; set; }
+
+    public string? Title { get; set; }
 }

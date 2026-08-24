@@ -161,7 +161,7 @@ public class InvoiceService : IInvoiceService
 
                 throw new InventoryOperationException(
                     (int)inventoryResponse.StatusCode,
-                    error?.Message
+                    error?.Detail
                         ?? "Não foi possível atualizar o estoque."
                 );
             }

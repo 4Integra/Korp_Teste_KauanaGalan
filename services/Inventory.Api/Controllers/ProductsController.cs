@@ -1,8 +1,7 @@
-﻿using Inventory.Api.Data;
+﻿using Inventory.Api.Dtos;
 using Inventory.Api.Models;
-using Inventory.Api.Dtos;
+using Inventory.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Api.Controllers;
 
@@ -10,67 +9,52 @@ namespace Inventory.Api.Controllers;
 [Route("api/products")]
 public class ProductsController : ControllerBase
 {
-    private readonly InventoryDbContext _context;
+    private readonly IProductService _productService;
 
-    public ProductsController(InventoryDbContext context)
+    public ProductsController(
+        IProductService productService)
     {
-        _context = context;
+        _productService = productService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetAll()
+    public async Task<ActionResult<IEnumerable<Product>>> GetAll(
+        CancellationToken cancellationToken)
     {
-        var products = await _context.Products
-            .AsNoTracking()
-            .ToListAsync();
+        var products =
+            await _productService.GetAllAsync(
+                cancellationToken);
 
         return Ok(products);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<Product>> GetById(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var product =
+            await _productService.GetByIdAsync(
+                id,
+                cancellationToken);
+
+        return Ok(product);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Product>> Create(
-        CreateProductRequest request)
+        CreateProductRequest request,
+        CancellationToken cancellationToken)
     {
-        var codeExists = await _context.Products
-            .AnyAsync(p => p.Code == request.Code);
-
-        if (codeExists)
-        {
-            return Conflict(new
-            {
-                message = "Já existe um produto com este código."
-            });
-        }
-
-        var product = new Product
-        {
-            Id = Guid.NewGuid(),
-            Code = request.Code.Trim(),
-            Description = request.Description.Trim(),
-            StockQuantity = request.StockQuantity
-        };
-
-        _context.Products.Add(product);
-
-        await _context.SaveChangesAsync();
+        var product =
+            await _productService.CreateAsync(
+                request,
+                cancellationToken);
 
         return CreatedAtAction(
             nameof(GetById),
             new { id = product.Id },
             product
         );
-    }
-
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Product>> GetById(Guid id)
-    {
-        var product = await _context.Products
-            .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        if (product is null)
-            return NotFound();
-
-        return Ok(product);
     }
 }
