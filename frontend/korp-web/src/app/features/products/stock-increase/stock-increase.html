@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>Adicionar estoque</h2>
+
+<mat-dialog-content>
+  <div class="product-summary">
+    <span class="product-code">
+      {{ product.code }}
+    </span>
+
+    <strong>
+      {{ product.description }}
+    </strong>
+
+    <span class="current-stock">
+      Saldo atual:
+      <strong>{{ product.stockQuantity }}</strong>
+    </span>
+  </div>
+
+  <form class="stock-form" [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Quantidade a adicionar</mat-label>
+
+      <input matInput type="number" min="1" formControlName="quantity" />
+
+      @if (form.controls.quantity.hasError('min')) {
+        <mat-error> A quantidade deve ser maior que zero. </mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="submitting">Cancelar</button>
+
+  <button mat-flat-button class="primary-button" [disabled]="submitting" (click)="submit()">
+    @if (submitting) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      Adicionar
+    }
+  </button>
+</mat-dialog-actions>

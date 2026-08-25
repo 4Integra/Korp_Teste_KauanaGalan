@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Confirmar impressão</h2>
+
+<mat-dialog-content>
+  <p>
+    Deseja imprimir a nota
+    <strong>#{{ formatNumber(invoice.number) }}</strong
+    >?
+  </p>
+
+  <p class="confirmation-note">O estoque será atualizado e a nota será fechada.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="printing">Cancelar</button>
+
+  <button mat-flat-button class="primary-button" [disabled]="printing" (click)="confirm()">
+    @if (printing) {
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>Processando...</span>
+    } @else {
+      Ok
+    }
+  </button>
+</mat-dialog-actions>

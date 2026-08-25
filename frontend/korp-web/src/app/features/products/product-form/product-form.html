@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Novo produto</h2>
+
+<mat-dialog-content>
+  <p class="dialog-description">Preencha os dados do produto para disponibilizá-lo no sistema.</p>
+
+  <p class="required-note">* Campos obrigatórios</p>
+
+  <form class="product-form" [formGroup]="form" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+
+      <input matInput formControlName="code" placeholder="Ex.: NB-001" />
+
+      @if (submitted && form.controls.code.hasError('required')) {
+        <mat-error> O código é obrigatório. </mat-error>
+      }
+
+      @if (submitted && form.controls.code.hasError('maxlength')) {
+        <mat-error> O código deve ter no máximo 50 caracteres. </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+
+      <input matInput formControlName="description" placeholder="Ex.: Notebook Korp" />
+
+      @if (submitted && form.controls.description.hasError('required')) {
+        <mat-error> A descrição é obrigatória. </mat-error>
+      }
+
+      @if (submitted && form.controls.description.hasError('maxlength')) {
+        <mat-error> A descrição deve ter no máximo 200 caracteres. </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Saldo inicial</mat-label>
+
+      <input matInput type="number" min="0" formControlName="stockQuantity" />
+
+      @if (submitted && form.controls.stockQuantity.hasError('required')) {
+        <mat-error> O saldo inicial é obrigatório. </mat-error>
+      }
+
+      @if (submitted && form.controls.stockQuantity.hasError('min')) {
+        <mat-error> O saldo não pode ser negativo. </mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="submitting">Cancelar</button>
+
+  <button mat-flat-button class="primary-button" [disabled]="submitting" (click)="submit()">
+    @if (submitting) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      Salvar produto
+    }
+  </button>
+</mat-dialog-actions>

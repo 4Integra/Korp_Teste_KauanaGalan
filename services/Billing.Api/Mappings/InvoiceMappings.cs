@@ -12,7 +12,9 @@ public static class InvoiceMappings
             Id = invoice.Id,
             Number = invoice.Number,
             Status = invoice.Status.ToString(),
-            CreatedAt = invoice.CreatedAt,
+            CreatedAt = DateTime.SpecifyKind(
+                invoice.CreatedAt,
+                DateTimeKind.Utc),
 
             Items = invoice.Items
                 .Select(item => new InvoiceItemResponse

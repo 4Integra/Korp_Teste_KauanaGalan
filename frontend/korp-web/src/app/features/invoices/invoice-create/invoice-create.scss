@@ -1,0 +1,107 @@
+.dialog-description {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.invoice-form {
+  width: min(840px, 80vw);
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 30px minmax(280px, 1fr) 140px 44px;
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.item-index {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 10px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.product-field,
+.quantity-field {
+  width: 100%;
+}
+
+.remove-button {
+  width: 36px;
+  height: 36px;
+  margin-top: var(--space-1);
+  color: #b42318 !important;
+}
+
+.remove-icon {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.add-button {
+  margin-top: var(--space-1);
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.state-container {
+  min-height: 220px;
+  width: min(700px, 75vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--color-text-secondary);
+
+  strong {
+    color: var(--color-text);
+  }
+
+  &.error strong {
+    color: #b42318;
+  }
+}
+
+.primary-button {
+  min-width: 130px;
+  gap: 8px;
+  background: var(--color-primary) !important;
+  color: white !important;
+}
+
+@media (max-width: 760px) {
+  .invoice-form {
+    width: 82vw;
+  }
+
+  .item-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .quantity-field,
+  .remove-button {
+    grid-column: 2;
+  }
+
+  .remove-button {
+    justify-self: start;
+    margin: calc(var(--space-2) * -1) 0 var(--space-2);
+  }
+}

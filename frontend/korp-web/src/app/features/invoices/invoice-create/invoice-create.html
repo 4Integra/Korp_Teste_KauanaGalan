@@ -1,0 +1,101 @@
+<h2 mat-dialog-title>Nova nota fiscal</h2>
+
+<mat-dialog-content>
+  <p class="dialog-description">Adicione os produtos e informe as quantidades da nota.</p>
+
+  @if (loadingProducts) {
+    <div class="state-container">
+      <mat-spinner diameter="32"></mat-spinner>
+      <span>Carregando produtos...</span>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-container error">
+      <strong>Serviço de estoque indisponível</strong>
+      <span>{{ errorMessage }}</span>
+      <button mat-button (click)="loadProducts()">Tentar novamente</button>
+    </div>
+  } @else if (products.length === 0) {
+    <div class="state-container">
+      <strong>Nenhum produto disponível</strong>
+      <span>Cadastre um produto antes de criar a nota.</span>
+    </div>
+  } @else {
+    <form [formGroup]="form" class="invoice-form">
+      <div formArrayName="items" class="items-list">
+        @for (item of items.controls; track item; let index = $index) {
+          <div [formGroupName]="index" class="item-row">
+            <span class="item-index">{{ index + 1 }}</span>
+
+            <mat-form-field appearance="outline" class="product-field">
+              <mat-label>Produto</mat-label>
+              <mat-select formControlName="productId" panelClass="product-select-panel">
+                @for (product of products; track product.id) {
+                  <mat-option
+                    [value]="product.id"
+                    [disabled]="isProductSelected(product.id, index)"
+                  >
+                    {{ product.code }} - {{ product.description }} (saldo:
+                    {{ product.stockQuantity }})
+                  </mat-option>
+                }
+              </mat-select>
+
+              @if (item.get('productId')?.hasError('required')) {
+                <mat-error>Selecione um produto.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="quantity-field">
+              <mat-label>Quantidade</mat-label>
+              <input matInput type="number" min="1" formControlName="quantity" />
+
+              @if (item.get('quantity')?.hasError('min')) {
+                <mat-error>Informe ao menos 1.</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-icon-button
+              type="button"
+              class="remove-button"
+              [attr.aria-label]="'Remover produto ' + (index + 1)"
+              title="Remover produto"
+              [disabled]="items.length === 1"
+              (click)="removeItem(index)"
+            >
+              <span class="remove-icon" aria-hidden="true"> × </span>
+            </button>
+          </div>
+        }
+      </div>
+
+      <button
+        mat-button
+        type="button"
+        class="add-button"
+        [disabled]="items.length >= products.length"
+        (click)="addItem()"
+      >
+        + Adicionar produto
+      </button>
+    </form>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="submitting">Cancelar</button>
+
+  <button
+    mat-flat-button
+    class="primary-button"
+    [disabled]="submitting || loadingProducts || products.length === 0"
+    (click)="submit()"
+  >
+    @if (submitting) {
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>Salvando...</span>
+    } @else {
+      Criar nota
+    }
+  </button>
+</mat-dialog-actions>

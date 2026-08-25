@@ -1,0 +1,125 @@
+.invoice-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(130px, 1fr));
+  gap: 12px;
+  width: min(700px, 78vw);
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: #f8fafc;
+
+  span {
+    color: var(--color-text-secondary);
+    font-size: 12px;
+  }
+}
+
+.status {
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+
+  &.open {
+    background: #e8f2fc;
+    color: #0f5fa8;
+  }
+
+  &.closed {
+    background: #ecfdf3;
+    color: #027a48;
+  }
+}
+
+.table-container {
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+}
+
+table {
+  width: 100%;
+  background: white;
+}
+
+.mat-mdc-header-row {
+  background: #f8fafc;
+}
+
+.product-code,
+.product-name {
+  display: block;
+}
+
+.product-code {
+  margin-bottom: 3px;
+  color: var(--color-primary-dark);
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-size: 12px;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.print-notice,
+.closed-notice {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.print-notice {
+  border: 1px solid #b8d7f2;
+  background: #f0f7fd;
+  color: #174f7d;
+}
+
+.closed-notice {
+  border: 1px solid #abefc6;
+  background: #ecfdf3;
+  color: #067647;
+}
+
+.state-container {
+  min-height: 260px;
+  width: min(620px, 75vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--color-text-secondary);
+
+  strong {
+    color: var(--color-text);
+  }
+
+  &.error strong {
+    color: #b42318;
+  }
+}
+
+.primary-button {
+  min-width: 145px;
+  gap: 8px;
+  background: var(--color-primary) !important;
+  color: white !important;
+}
+
+@media (max-width: 620px) {
+  .invoice-summary {
+    grid-template-columns: 1fr;
+    width: 80vw;
+  }
+}

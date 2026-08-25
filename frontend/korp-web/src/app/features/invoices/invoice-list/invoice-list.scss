@@ -1,0 +1,171 @@
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 6px;
+
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+
+    color: var(--color-text-secondary);
+
+    font-size: 14px;
+  }
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primary-button {
+  background: var(--color-primary) !important;
+  color: white !important;
+}
+
+.erp-card {
+  overflow: hidden;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.04),
+    0 2px 6px rgba(16, 24, 40, 0.04);
+}
+
+.invoice-table {
+  min-width: 720px;
+  width: 100%;
+
+  background: white;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-mdc-header-row {
+  background: #f8fafc;
+}
+
+.mat-mdc-header-cell {
+  color: #475467;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.mat-sort-header {
+  cursor: pointer;
+}
+
+.mat-mdc-row {
+  &:hover {
+    background: #f8fbfe;
+  }
+}
+
+.invoice-number {
+  color: var(--color-primary-dark);
+
+  font-family: 'Cascadia Code', Consolas, monospace;
+
+  font-weight: 650;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  &.open {
+    background: #e8f2fc;
+    color: #0f5fa8;
+  }
+
+  &.closed {
+    background: #ecfdf3;
+    color: #027a48;
+  }
+}
+
+.action-button {
+  color: var(--color-primary) !important;
+
+  font-weight: 600;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.print-action {
+  color: var(--color-primary) !important;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+}
+
+.state-container {
+  min-height: 260px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  color: var(--color-text-secondary);
+
+  strong {
+    color: var(--color-text);
+  }
+
+  &.error strong {
+    color: #b42318;
+  }
+}
+
+@media (max-width: 800px) {
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

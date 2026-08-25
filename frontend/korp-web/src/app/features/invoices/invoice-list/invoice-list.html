@@ -1,0 +1,120 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1>Notas fiscais</h1>
+
+      <p>Consulte e gerencie as notas fiscais emitidas.</p>
+    </div>
+
+    <div class="page-actions">
+      <button mat-button (click)="loadInvoices()">Atualizar</button>
+
+      <button mat-flat-button class="primary-button" (click)="openCreateDialog()">
+        + Nova nota
+      </button>
+    </div>
+  </header>
+
+  <mat-card class="erp-card">
+    @if (loading) {
+      <div class="state-container">
+        <mat-spinner diameter="36"></mat-spinner>
+
+        <span> Carregando notas fiscais... </span>
+      </div>
+    } @else if (errorMessage) {
+      <div class="state-container error">
+        <strong> Não foi possível carregar os dados </strong>
+
+        <span>
+          {{ errorMessage }}
+        </span>
+
+        <button mat-button (click)="loadInvoices()">Tentar novamente</button>
+      </div>
+    } @else if (dataSource.data.length === 0) {
+      <div class="state-container">
+        <strong> Nenhuma nota fiscal cadastrada </strong>
+
+        <span> Crie uma nota para começar. </span>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table
+          mat-table
+          matSort
+          matSortActive="number"
+          matSortDirection="desc"
+          [dataSource]="dataSource"
+          class="invoice-table"
+        >
+          <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="number">Número</th>
+
+            <td mat-cell *matCellDef="let invoice">
+              <span class="invoice-number"> #{{ formatNumber(invoice.number) }} </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">Data</th>
+
+            <td mat-cell *matCellDef="let invoice">
+              {{ invoice.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="items">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="items">Itens</th>
+
+            <td mat-cell *matCellDef="let invoice">
+              {{ invoice.items.length }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
+
+            <td mat-cell *matCellDef="let invoice">
+              <span class="status" [class.open]="isOpen(invoice)" [class.closed]="!isOpen(invoice)">
+                {{ getStatusLabel(invoice.status) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+
+            <td mat-cell *matCellDef="let invoice">
+              <div class="actions-cell">
+                <button mat-button class="action-button" (click)="openDetailsDialog(invoice)">
+                  Ver detalhes
+                </button>
+
+                @if (isOpen(invoice)) {
+                  <button
+                    mat-icon-button
+                    class="print-action"
+                    [attr.aria-label]="'Imprimir nota #' + formatNumber(invoice.number)"
+                    title="Imprimir nota"
+                    (click)="openPrintDialog(invoice)"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M7 9V4h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v6H7z"
+                      />
+                    </svg>
+                  </button>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    }
+  </mat-card>
+</section>

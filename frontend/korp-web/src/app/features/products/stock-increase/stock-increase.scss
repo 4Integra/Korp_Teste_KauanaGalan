@@ -1,0 +1,41 @@
+.product-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  margin-bottom: var(--space-5);
+}
+
+.product-code {
+  color: var(--color-primary-dark);
+
+  font-family: 'Cascadia Code', Consolas, monospace;
+
+  font-size: 12px;
+}
+
+.current-stock {
+  margin-top: var(--space-1);
+
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.stock-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: min(400px, 75vw);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.primary-button {
+  min-width: 110px;
+
+  background: var(--color-primary) !important;
+  color: white !important;
+}

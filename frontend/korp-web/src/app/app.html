@@ -1,0 +1,52 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">K</div>
+
+      <div class="brand-text">
+        <strong>KORP</strong>
+        <span>ERP Challenge</span>
+      </div>
+    </div>
+
+    <div class="navigation-title">Gestão</div>
+
+    <nav class="navigation">
+      <a routerLink="/products" routerLinkActive="active" class="nav-item">
+        <span class="nav-indicator"></span>
+
+        Produtos
+      </a>
+
+      <a routerLink="/invoices" routerLinkActive="active" class="nav-item">
+        <span class="nav-indicator"></span>
+
+        Notas fiscais
+      </a>
+
+      <a routerLink="/stock" routerLinkActive="active" class="nav-item">
+        <span class="nav-indicator"></span>
+
+        Estoque
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">Teste técnico KORP</div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar">
+      <div>
+        <span class="topbar-eyebrow"> Sistema de emissão </span>
+
+        <div class="topbar-title">Notas Fiscais</div>
+      </div>
+
+      <div class="environment">Desenvolvimento</div>
+    </header>
+
+    <main class="page-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
